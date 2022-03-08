@@ -37,6 +37,9 @@ mail:
   # See config/initializers/devise.rb where this is used
   # mailer_sender: '"Password Pusher" <pglombardo@pwpush.com>'
 
+file_uploads:
+  enabled: true
+
 # List of supported languages indexed by language code.  This is used
 # to build the in application language menu.
 #
