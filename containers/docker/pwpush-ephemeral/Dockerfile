@@ -1,21 +1,22 @@
 # pwpush-ephemeral
-FROM ruby:3.0.3
+FROM ruby:3-slim
 
 LABEL maintainer='pglombardo@hey.com'
 
 ENV APP_ROOT=/opt/PasswordPusher
 ENV PATH=${APP_ROOT}:${PATH} HOME=${APP_ROOT}
 
-# For the latest yarn
+RUN apt-get update && apt-get install -y curl ca-certificates gnupg
+
+# Required to get the Node.js yarn tool
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # Required packages
-RUN apt-get update -qq && \
-    apt-get install -qq -y --assume-yes build-essential apt-utils libpq-dev git curl tzdata libsqlite3-0 libsqlite3-dev zlib1g-dev nodejs yarn && \
-    cd /opt && \
-    git clone https://github.com/pglombardo/PasswordPusher.git && \
-    touch ${APP_ROOT}/log/private.log
+RUN apt-get update && apt-get install -qq -y --assume-yes build-essential apt-utils libpq-dev git curl tzdata libsqlite3-0 libsqlite3-dev zlib1g-dev nodejs yarn
+
+RUN mkdir -p ${APP_ROOT}
+ADD ./ ${APP_ROOT}/
 
 EXPOSE 5100
 
